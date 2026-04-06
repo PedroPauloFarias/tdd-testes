@@ -5,74 +5,56 @@ export function resetId() {
 }
 
 export function validateTitle(title) {
-  if (typeof title !== 'string') {
-    return false;
-  }
-  const trimmed = title.trim();
-  return trimmed.length >= 3;
+  if (typeof title !== 'string') return false;
+  return title.trim().length >= 3;
 }
 
-export function createTask(title) {
+// ✨ Modificado: agora aceita priority com valor padrão 'medium'
+export function createTask(title, priority = 'medium') {
   return {
     id: _nextId++,
     title: title.trim(),
     completed: false,
+    priority: priority,
   };
 }
 
 export function addTask(tasks, title) {
   if (!validateTitle(title)) {
-    throw new Error(
-      'Título inválido: deve ser uma string com pelo menos 3 caracteres.'
-    );
+    throw new Error('Título inválido: deve ser uma string com pelo menos 3 caracteres.');
   }
   const newTask = createTask(title);
   return [...tasks, newTask];
 }
 
-// ------------------------------------------------------------
-// Alteração de estado
-// ------------------------------------------------------------
 export function toggleTask(task) {
   return { ...task, completed: !task.completed };
 }
 
-
-// ------------------------------------------------------------
-// Remoção
-// ------------------------------------------------------------
 export function removeTask(tasks, taskId) {
   return tasks.filter((task) => task.id !== taskId);
 }
 
-
-// ------------------------------------------------------------
-// Filtros
-// ------------------------------------------------------------
 export function filterTasks(tasks, status) {
   switch (status) {
-    case 'completed':
-      return tasks.filter((task) => task.completed === true);
-    case 'pending':
-      return tasks.filter((task) => task.completed === false);
+    case 'completed': return tasks.filter((t) => t.completed === true);
+    case 'pending': return tasks.filter((t) => t.completed === false);
     case 'all':
-    default:
-      return [...tasks];
+    default: return [...tasks];
   }
 }
 
+export function countTasks(tasks) { return tasks.length; }
+export function countCompleted(tasks) { return tasks.filter((t) => t.completed === true).length; }
+export function countPending(tasks) { return tasks.filter((t) => t.completed === false).length; }
 
 // ------------------------------------------------------------
-// Contagens
+// Exercício 4: Prioridade
 // ------------------------------------------------------------
-export function countTasks(tasks) {
-  return tasks.length;
+export function validatePriority(priority) {
+  return priority === 'low' || priority === 'medium' || priority === 'high';
 }
 
-export function countCompleted(tasks) {
-  return tasks.filter((task) => task.completed === true).length;
-}
-
-export function countPending(tasks) {
-  return tasks.filter((task) => task.completed === false).length;
+export function filterByPriority(tasks, priority) {
+  return tasks.filter((task) => task.priority === priority);
 }
