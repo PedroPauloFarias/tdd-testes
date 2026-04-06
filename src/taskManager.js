@@ -36,3 +36,11 @@ export function addTask(tasks, title) {
 export function toggleTask(task) {
   return { ...task, completed: !task.completed };
 }
+
+
+// ------------------------------------------------------------
+// Remoção
+// ------------------------------------------------------------
+export function removeTask(tasks, taskId) {
+  return tasks.filter((task) => task.id !== taskId);
+}
