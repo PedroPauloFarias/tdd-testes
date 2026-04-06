@@ -9,6 +9,8 @@ import {
   countTasks,
   countCompleted,
   countPending,
+  validatePriority,
+  filterByPriority,
   resetId,
 } from '../src/taskManager.js';
 
@@ -317,5 +319,47 @@ describe('countPending', () => {
   it('deve retornar 0 quando todas as tarefas estão concluídas', () => {
     const allCompleted = tasks.map((t) => ({ ...t, completed: true }));
     expect(countPending(allCompleted)).toBe(0);
+  });
+});
+
+
+// ============================================================
+// Exercício 4: Prioridade
+// ============================================================
+describe('validatePriority', () => {
+  it('deve retornar true para prioridades válidas', () => {
+    expect(validatePriority('low')).toBe(true);
+    expect(validatePriority('medium')).toBe(true);
+    expect(validatePriority('high')).toBe(true);
+  });
+  it('deve retornar false para prioridades inválidas', () => {
+    expect(validatePriority('urgente')).toBe(false);
+    expect(validatePriority('')).toBe(false);
+  });
+});
+
+describe('createTask com prioridade', () => {
+  beforeEach(() => { resetId(); });
+  it('deve criar tarefa com prioridade medium por padrão', () => {
+    const task = createTask('Tarefa');
+    expect(task.priority).toBe('medium');
+  });
+  it('deve criar tarefa com prioridade especificada', () => {
+    const task = createTask('Tarefa', 'high');
+    expect(task.priority).toBe('high');
+  });
+});
+
+describe('filterByPriority', () => {
+  it('deve retornar apenas tarefas da prioridade especificada', () => {
+    resetId();
+    const tasks = [
+      createTask('T1', 'low'),
+      createTask('T2', 'high'),
+      createTask('T3', 'high')
+    ];
+    const result = filterByPriority(tasks, 'high');
+    expect(result).toHaveLength(2);
+    expect(result[0].title).toBe('T2');
   });
 });
