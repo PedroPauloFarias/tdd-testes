@@ -11,6 +11,7 @@ import {
   countPending,
   validatePriority,
   filterByPriority,
+  isDuplicate,
   resetId,
 } from '../src/taskManager.js';
 
@@ -361,5 +362,27 @@ describe('filterByPriority', () => {
     const result = filterByPriority(tasks, 'high');
     expect(result).toHaveLength(2);
     expect(result[0].title).toBe('T2');
+  });
+});
+
+// ============================================================
+// Exercício 5: Impedir tarefas duplicadas
+// ============================================================
+describe('isDuplicate', () => {
+  it('deve retornar true para título exato', () => {
+    expect(isDuplicate([{ title: 'Estudar' }], 'Estudar')).toBe(true);
+  });
+  it('deve retornar true para título ignorando maiúsculas/minúsculas', () => {
+    expect(isDuplicate([{ title: 'Estudar' }], 'estudar')).toBe(true);
+  });
+  it('deve retornar false para título diferente', () => {
+    expect(isDuplicate([{ title: 'Estudar' }], 'Trabalhar')).toBe(false);
+  });
+});
+
+describe('addTask - duplicadas', () => {
+  it('deve lançar erro quando já existe tarefa com o mesmo título', () => {
+    const tasks = [{ id: 1, title: 'Estudar', completed: false }];
+    expect(() => addTask(tasks, 'Estudar')).toThrow('Tarefa duplicada');
   });
 });
