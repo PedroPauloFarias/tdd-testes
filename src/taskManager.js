@@ -9,7 +9,6 @@ export function validateTitle(title) {
   return title.trim().length >= 3;
 }
 
-// ✨ Modificado: agora aceita priority com valor padrão 'medium'
 export function createTask(title, priority = 'medium') {
   return {
     id: _nextId++,
@@ -19,9 +18,13 @@ export function createTask(title, priority = 'medium') {
   };
 }
 
+// ✨ Modificado: agora verifica duplicadas antes de adicionar
 export function addTask(tasks, title) {
   if (!validateTitle(title)) {
     throw new Error('Título inválido: deve ser uma string com pelo menos 3 caracteres.');
+  }
+  if (isDuplicate(tasks, title)) {
+    throw new Error('Tarefa duplicada');
   }
   const newTask = createTask(title);
   return [...tasks, newTask];
@@ -48,13 +51,18 @@ export function countTasks(tasks) { return tasks.length; }
 export function countCompleted(tasks) { return tasks.filter((t) => t.completed === true).length; }
 export function countPending(tasks) { return tasks.filter((t) => t.completed === false).length; }
 
-// ------------------------------------------------------------
-// Exercício 4: Prioridade
-// ------------------------------------------------------------
 export function validatePriority(priority) {
   return priority === 'low' || priority === 'medium' || priority === 'high';
 }
 
 export function filterByPriority(tasks, priority) {
   return tasks.filter((task) => task.priority === priority);
+}
+
+// ------------------------------------------------------------
+// Exercício 5: Duplicadas
+// ------------------------------------------------------------
+export function isDuplicate(tasks, title) {
+  const normalizedTitle = title.trim().toLowerCase();
+  return tasks.some((task) => task.title.trim().toLowerCase() === normalizedTitle);
 }
